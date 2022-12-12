@@ -30,7 +30,7 @@ if ($args->{'help'}) {
 $Dyninst::utils::debug_mode = $args->{'debug-mode'};
 
 # By default, build Dyninst
-$args->{'build-dyninst'} = 1;
+$args->{'build-dyninst'} = 0;
 
 # Configure restart, if requested
 if ($args->{'restart'}) {
@@ -56,7 +56,7 @@ $logger->write("Invoked using '$Dyninst::options::invocation_args'\n\n");
 
 Dyninst::logs::save_system_info($logger, $args->{'hostname'});
 
-my $root_dir = make_root($args);
+my $root_dir = "AAAA";#make_root($args);
 
 $logger->write("root_dir: $root_dir");
 

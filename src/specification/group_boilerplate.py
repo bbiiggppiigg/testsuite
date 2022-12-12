@@ -1,7 +1,7 @@
 import os
 import tuples
 import utils
-
+from functools import reduce
 def format_test_defines(test):
    line = 'extern int ' + test + '_mutatee();\n'
    return line
@@ -41,6 +41,6 @@ def write_group_mutatee_boilerplate_file(filename, tests, info, platform):
 def write_group_mutatee_boilerplate(directory, info, platform):
    groups = filter(lambda g: len(g['tests']) >= 2, info['rungroups'])
    tests_by_group = reduce(accumulate_tests_by_mutatee, groups, {})
-   for mutatee, tests in tests_by_group.iteritems():
+   for mutatee, tests in tests_by_group.items():
       write_group_mutatee_boilerplate_file(directory + '/' + mutatee + '_group.c', tests, info, platform)
 

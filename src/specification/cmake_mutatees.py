@@ -35,38 +35,37 @@ def get_module(mutatee):
    return mutatee["module"]
 
 def is_valid_test(mutatee):
-	 if(mutatee['groupable'] == 'false'):
-		  return 'true'
-	 groups = info['rungroups']
-	 mutatee_tests = filter(lambda g: g['mutatee'] == mutatee['name'], groups)
-	 if not mutatee_tests:
-            return 'false'
-	 else:
-            return 'true'
+    if(mutatee['groupable'] == 'false'):
+        return 'true'
+    groups = info['rungroups']
+    mutatee_tests = filter(lambda g: g['mutatee'] == mutatee['name'], groups)
+    if not mutatee_tests:
+        return 'false'
+    else:
+        return 'true'
 
 
-	 
 def is_groupable(mutatee, info):
-	 if(mutatee['groupable'] == 'false'):
-		  return '0'
-	 groups = info['rungroups']
-	 mutatee_tests = filter(lambda g: g['mutatee'] == mutatee['name'], groups)
-         tmp = map(lambda g: len(g['tests']), mutatee_tests)
-         if not tmp:
-            return '0'
-	 if max(tmp) > 1:
-		  return '1'
-	 else:
-		  return '0'
+    if(mutatee['groupable'] == 'false'):
+        return '0'
+    groups = info['rungroups']
+    mutatee_tests = filter(lambda g: g['mutatee'] == mutatee['name'], groups)
+    tmp = map(lambda g: len(g['tests']), mutatee_tests)
+    if not tmp:
+        return '0'
+    if max(tmp) > 1:
+        return '1'
+    else:
+        return '0'
 
 def get_all_mutatee_sources(groupable, module, info):
-	return utils.uniq(reduce(lambda a, b: set(a) | set(b),
-		(map(lambda m: m['preprocessed_sources'],
-		filter(lambda m: m['name'] != 'none'
-			and is_valid_test(m) == 'true' and is_groupable(m, info) == groupable and get_module(m) == module,
-			info['mutatees']))),
-		[]))
-	 
+    return utils.uniq(reduce(lambda a, b: set(a) | set(b),
+        (map(lambda m: m['preprocessed_sources'],
+        filter(lambda m: m['name'] != 'none'
+            and is_valid_test(m) == 'true' and is_groupable(m, info) == groupable and get_module(m) == module,
+            info['mutatees']))),
+        []))
+     
 def collect_mutatee_comps(mutatees):
    comps = []
    for m in mutatees:
@@ -233,14 +232,14 @@ def print_src_lists(mutatees, platform, info, directory):
 
    srcs_to_vars = dict()
    i = 0
-   for s, mlist in srcs_to_mutatees.iteritems():
+   for s, mlist in srcs_to_mutatees.items():
       out.write("set (SOURCE_LIST_%d \n%s)\n" % (i, s))
       for m in mlist:
          m['srclist_index'] = i
       srcs_to_vars[s] = i
       i += 1
 
-   for s, m in preproc_to_mutatees.iteritems():
+   for s, m in preproc_to_mutatees.items():
       groupable = is_groupable(m, info)
       module = m['module']
       if ((utils.extension(s) == ".c") |
@@ -304,12 +303,12 @@ def print_compiler_cmakefiles(mutatees, platform, info, cmakelists, directory):
       cmake_tree[exe][abi][stat_dyn][pic][opt][module]['path'] = path;
       cmake_tree[exe][abi][stat_dyn][pic][opt][module].setdefault('mutatees', []).append(mut)
 
-   for exe, tmp1 in cmake_tree.iteritems():
-      for abi, tmp2 in tmp1.iteritems():
-         for stat_dyn, tmp3 in tmp2.iteritems():
-            for pic, tmp4 in tmp3.iteritems():
-               for opt, tmp5 in tmp4.iteritems():
-                  for module, tmp6 in tmp5.iteritems():
+   for exe, tmp1 in cmake_tree.items():
+      for abi, tmp2 in tmp1.items():
+         for stat_dyn, tmp3 in tmp2.items():
+            for pic, tmp4 in tmp3.items():
+               for opt, tmp5 in tmp4.items():
+                  for module, tmp6 in tmp5.items():
                      path = tmp6['path']
                      mlist = tmp6['mutatees']
                      print_one_cmakefile(exe, abi, stat_dyn, pic, opt, module, path, mlist, platform, cmakelists, info, directory)

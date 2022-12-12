@@ -1,23 +1,23 @@
 import os
+from functools import reduce
 ######################################################################
 # Utility functions
 ######################################################################
 #
-
 
 def uniq(lst):
    return reduce(lambda l, i: ((i not in l) and l.append(i)) or l, lst, [])
 
 
 def find_platform(pname, info):
-   plist = filter(lambda p: p['name'] == pname, info['platforms'])
+   plist = list(filter(lambda p: p['name'] == pname, info['platforms']))
    if len(plist) == 0:
       return None
    else:
       return plist[0]
 
 def find_language(lname, info):
-   llist = filter(lambda l: l['name'] == lname, info['languages'])
+   llist = list(filter(lambda l: l['name'] == lname, info['languages']))
    if len(llist) == 0:
       return None
    else:
@@ -39,21 +39,21 @@ def replace_extension(name, ext):
 # enforcing that in the tuple generator.
 def get_file_lang(filename, info):
    ext = extension(filename)
-   langs = filter(lambda x: ext in x['extensions'], info['languages'])
+   langs = list(filter(lambda x: ext in x['extensions'], info['languages']))
    # We have a list of all languages which match the extension of the file
    # Filter out all of those languages for which there is no compiler on this
    # platform:
    #  Find the compilers available on this platform
    platform = os.environ.get('PLATFORM')
-   comps = filter(lambda x: platform in info['compilers'][x]['platforms'],
-               info['compilers'])
+   comps = list(filter(lambda x: platform in info['compilers'][x]['platforms'],
+               info['compilers']))
    #  Get a list of all the languages supported by those compilers
    supported_langs = map(lambda x: info['compilers'][x]['languages'],
                     comps)
    supported_langs = reduce(lambda x,y:x+y, supported_langs)
    supported_langs = uniq(supported_langs)
    #  Remove all languages from langs that aren't in supported_langs
-   langs = filter(lambda x: x['name'] in supported_langs, langs)
+   langs = list(filter(lambda x: x['name'] in supported_langs, langs))
    if len(langs) > 1:
       return langs
    else:
@@ -61,9 +61,9 @@ def get_file_lang(filename, info):
 
 def compiler_count(lang, info):
    plat = os.environ.get('PLATFORM')
-   return len(filter(lambda x: lang in info['compilers'][x]['languages']
+   return len(list(filter(lambda x: lang in info['compilers'][x]['languages']
                        and plat in info['compilers'][x]['platforms']
-                 , info['compilers']))
+                 , info['compilers'])))
 
 # Returns a string containing the mutatee's compile-time options filename
 # component: a string of the form _<compiler>_<ABI>_<optimization>
